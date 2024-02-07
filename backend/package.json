@@ -1,0 +1,45 @@
+{
+  "name": "juice-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "seed:dev": "node_modules/.bin/nodemon ./db/seed.js",
+    "seed": "node db/seed.js",
+    "start:dev": "node_modules/.bin/nodemon index.js",
+    "start": "node index.js",
+    "test": "node_modules/.bin/jest --runInBand",
+    "test:watch": "node_modules/.bin/jest --watchAll --runInBand"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wallacepreston/fitnesstrackr.git"
+  },
+  "keywords": [
+    "node",
+    "express",
+    "postgresql",
+    "jquery",
+    "javascript"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "nodemon": "^2.0.4"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "bcrypt": "^4.0.1",
+    "chalk": "^4.0.0",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "faker": "^4.1.0",
+    "jest": "^26.0.1",
+    "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
+    "pg": "^8.2.1"
+  }
+}
