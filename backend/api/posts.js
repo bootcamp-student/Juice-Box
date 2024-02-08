@@ -53,6 +53,5 @@ postsRouter.post('/', requireUser, async (req, res, next) => {
   }
 });
 
-// ... rest of your code
 
 module.exports = postsRouter;

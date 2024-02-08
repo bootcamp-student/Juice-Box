@@ -11,7 +11,7 @@ function Posts() {
 
     const fetchPosts = async () => {
         try {
-            const response = await axios.get('http://localhost:4000/posts');
+            const response = await axios.get('http://localhost:3000/posts');
             setPosts(response.data);
         } catch (error) {
             console.error('Error fetching posts:', error);
@@ -37,7 +37,7 @@ function Posts() {
     const handlePostSubmit = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://localhost:4000/posts', { text: newPost });
+            const response = await axios.post('http://localhost:3000/posts', { text: newPost });
             setPosts([...posts, response.data]);
             setNewPost('');
         } catch (error) {
