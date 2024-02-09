@@ -2,6 +2,9 @@
 const { client } = require('./index')
 const {
   createUser,
+  createLike,
+  deleteLike,
+  getLikesByPostId,
   updateUser,
   getAllUsers,
   getUserById,
@@ -197,6 +200,36 @@ async function testDB() {
     console.log("Finished database tests!");
   } catch (error) {
     console.log("Error during testDB");
+    throw error;
+  }
+}
+
+
+async function createInitialLikes() {
+  try {
+    console.log("Starting to create likes...");
+
+    const [albert, sandra, glamgal] = await getAllUsers();
+    const posts = await getAllPosts();
+
+    await createLike({
+      postId: posts[0].id,
+      userId: albert.id
+    });
+
+    await createLike({
+      postId: posts[1].id,
+      userId: sandra.id
+    });
+
+    await createLike({
+      postId: posts[2].id,
+      userId: glamgal.id
+    });
+
+    console.log("Finished creating likes!");
+  } catch (error) {
+    console.error("Error creating likes!");
     throw error;
   }
 }

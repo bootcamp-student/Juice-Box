@@ -1,29 +1,33 @@
-const client = require("../api/apiClient");
-const bcrypt = require('bcrypt');
-let SALT_COUNT = 10;
+const { Client } = require("pg"); // imports the pg module
 
-async function createUser({
-                            username,
-                            password,
-                            name,
-                            location
-                          }) {
+const client = new Client({
+  connectionString:
+      process.env.DATABASE_URL || "postgresql://localhost:5432/juicebox-dev",
+  ssl:
+      process.env.NODE_ENV === "production"
+          ? { rejectUnauthorized: false }
+          : undefined,
+});
+
+async function createUser({ username, password, name, location }) {
   try {
-    const hashedPassword = await bcrypt.hash(password, SALT_COUNT);
-
-    const { rows: [ user ] } = await client.query(`
-      INSERT INTO users(username, password, name, location)
-      VALUES($1, $2, $3, $4)
-      ON CONFLICT (username) DO NOTHING
+    const {
+      rows: [user],
+    } = await client.query(
+        `
+      INSERT INTO users(username, password, name, location) 
+      VALUES($1, $2, $3, $4) 
+      ON CONFLICT (username) DO NOTHING 
       RETURNING *;
-    `, [username, hashedPassword, name, location]);
+    `,
+        [username, password, name, location]
+    );
 
     return user;
   } catch (error) {
     throw error;
   }
 }
-
 async function updateUser(id, fields = {}) {
   // Set up initial update SQL
   const setString = Object.keys(fields).map(
@@ -347,8 +351,49 @@ async function getAllTags() {
   }
 }
 
+async function createLike({ postId, userId }) {
+  try {
+    const { rows } = await client.query(`
+      INSERT INTO likes (post_id, user_id)
+      VALUES ($1, $2)
+      RETURNING *;
+    `, [postId, userId]);
+
+    return rows[0];
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function deleteLike({ postId, userId }) {
+  try {
+    await client.query(`
+      DELETE FROM likes
+      WHERE post_id = $1 AND user_id = $2;
+    `, [postId, userId]);
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function getLikesByPostId(postId) {
+  try {
+    const { rows } = await client.query(`
+      SELECT * FROM likes
+      WHERE post_id = $1;
+    `, [postId]);
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
 module.exports = {
   client,
+  createLike,
+  deleteLike,
+  getLikesByPostId,
   createUser,
   updateUser,
   getAllUsers,

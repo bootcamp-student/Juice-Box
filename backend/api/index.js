@@ -55,6 +55,8 @@ apiRouter.use('/posts', postsRouter);
 const tagsRouter = require('./tags');
 apiRouter.use('/tags', tagsRouter);
 
+const likesRouter = require('./likes')
+apiRouter.use('/likes', likesRouter)
 apiRouter.use((error, req, res, next) => {
   res.send(error);
 });
