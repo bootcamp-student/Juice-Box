@@ -1,6 +1,6 @@
 const express = require('express');
 const postsRouter = express.Router();
-const client = require('./apiClient'); // Import the apiClient
+const client = require('../../index'); // Import the apiClient
 
 const { requireUser } = require('./utils');
 

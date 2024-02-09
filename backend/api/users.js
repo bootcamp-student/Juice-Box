@@ -12,7 +12,7 @@ const jwt = require('jsonwebtoken');
 usersRouter.get('/', async (req, res, next) => {
   try {
     const users = await getAllUsers();
-  
+
     res.send({
       users
     });
@@ -20,7 +20,6 @@ usersRouter.get('/', async (req, res, next) => {
     next({ name, message });
   }
 });
-
 usersRouter.post('/login', async (req, res, next) => {
   const { username, password } = req.body;
 
@@ -34,7 +33,7 @@ usersRouter.post('/login', async (req, res, next) => {
   try {
     const user = await getUserByUsername(username);
 
-    if (user && user.password == password) {
+    if (user && user.password === password) {
       const token = jwt.sign({ 
         id: user.id, 
         username

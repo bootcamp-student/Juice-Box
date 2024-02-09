@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Application</title>
+    <!-- You can link to an external CSS file here -->
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<div id="root">
+    <!-- Registration form -->
+    <form id="register-form">
+        <h3>REGISTER</h3>
+        <div>
+            <input id="register-username" type="text" placeholder="Username" />
+            <input id="register-password" type="password" placeholder="Password" />
+            <input id="register-name" type="text" placeholder="Name" />
+            <input id="register-location" type="text" placeholder="Location" />
+            <br />
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+    <br />
+    <!-- Login form -->
+    <form id="login-form">
+        <h3>LOGIN</h3>
+        <div>
+            <input id="login-username" type="text" placeholder="Username" />
+            <input id="login-password" type="password" placeholder="Password" />
+            <br />
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+    <br />
+    <!-- Button to create a new post -->
+    <button id="create-post-button">Create Post</button>
+    <!-- Form to create a new post (hidden by default) -->
+    <form id="create-post-form" style="display: none;">
+        <h3>Create New Post</h3>
+        <div>
+            <input id="post-title" type="text" placeholder="Title" />
+            <textarea id="post-content" placeholder="Content"></textarea>
+            <input id="post-tags" type="text" placeholder="Tags (comma-separated)" />
+            <br />
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+    <br />
+    <!-- Button to show all available posts -->
+    <button id="show-posts-button">Show All Posts</button>
+    <!-- Search bar to search for posts -->
+    <input id="search-bar" type="text" placeholder="Search for posts" />
+    <button id="search-button">Search</button>
+    <br /><br />
+    <!-- Posts will go here -->
+    <div id="posts"></div>
+</div>
+
+<!-- You can link to an external JavaScript file here -->
+<script src="app.js">
+    // Define the createPost function
+    async function createPost(postData) {
+        const response = await fetch('http://localhost:3000/api/posts', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add authorization header if needed
+            },
+            body: JSON.stringify(postData)
+        });
+        if (!response.ok) {
+            throw new Error('Failed to create post');
+        }
+        const data = await response.json();
+        return data;
+    }
+
+    // Handle the create post form submission
+    document.getElementById('create-post-button').addEventListener('click', function (event) {
+        // Show the create post form when the button is clicked
+        document.getElementById('create-post-form').style.display = 'block';
+    });
+
+    document.getElementById('create-post-form').addEventListener('submit', async function (event) {
+        event.preventDefault(); // Prevent default form submission behavior
+
+        // Retrieve form data
+        const title = document.getElementById('post-title').value;
+        const content = document.getElementById('post-content').value;
+
+        // Send POST request to create new post
+        try {
+            const response = await fetch('http://localhost:3000/api/posts', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ title, content })
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to create post');
+            }
+
+            // Reload all posts after successful creation of new post
+            loadAllPosts();
+        } catch (error) {
+            console.error('Error creating post:', error);
+        }
+    });
+
+    // Function to load all posts
+    async function loadAllPosts() {
+        try {
+            const response = await fetch('http://localhost:3000/api/posts');
+            if (!response.ok) {
+                throw new Error('Failed to fetch posts');
+            }
+            const data = await response.json();
+            // Display all posts in the UI
+            displayPosts(data.posts);
+        } catch (error) {
+            console.error('Error loading posts:', error);
+        }
+    }
+
+    // Function to display posts in the UI
+    function displayPosts(posts) {
+        const postsDiv = document.getElementById('posts');
+        postsDiv.innerHTML = ''; // Clear existing posts
+
+        posts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.innerHTML = `
+                    <h3 style="color: red;">Title:</h3>
+                    <h4>${post.title}</h4>
+                    <h3 style="color: red;">Content:</h3>
+                    <h4>${post.content}</h4>
+                    <hr>
+                `;
+            postsDiv.appendChild(postElement);
+        });
+    }
+
+    // Load all posts when the page loads
+    window.addEventListener('load', loadAllPosts);
+</script>
+</body>
+</html>
+

@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "seed:dev": "node_modules/.bin/nodemon ./db/seed.js",
-    "seed": "node db/seed.js",
-    "start:dev": "node_modules/.bin/nodemon index.js",
-    "start": "node index.js",
-    "test": "node_modules/.bin/jest --runInBand",
-    "test:watch": "node_modules/.bin/jest --watchAll --runInBand"
+    "seed:dev": "backend/node_modules/.bin/nodemon ./db/seed.js",
+    "seed": "node backend/db/seed.js",
+    "start:dev": "backend/node_modules/.bin/nodemon ../index.js",
+    "server": "node index.js",
+    "test": "backend/node_modules/.bin/jest --runInBand",
+    "test:watch": "backend/node_modules/.bin/jest --watchAll --runInBand"
   },
   "repository": {
     "type": "git",
@@ -41,5 +41,6 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "pg": "^8.2.1"
-  }
+  },
+  "proxy": "http://localhost:4000"
 }

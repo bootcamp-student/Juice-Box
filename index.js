@@ -1,8 +1,12 @@
 require('dotenv').config();
-require('./api/apiClient');
+
 const { PORT = 3000 } = process.env;
+console.log(process.env.JWT_SECRET);
+
+
 const express = require('express');
 const server = express();
+const path = require('path');
 
 const bodyParser = require('body-parser');
 server.use(bodyParser.json());
@@ -18,21 +22,13 @@ server.use((req, res, next) => {
     next();
 });
 
-const apiRouter = require('./api');
+
+server.use(express.static(path.join(__dirname, 'public')));
+
+const apiRouter = require('./backend/api');
 server.use('/api', apiRouter);
 
-const tagsRouter = require('./api/tags.js');
-server.use('/tags', tagsRouter);
-
-const usersRouter = require('./api/users.js');
-server.use('/users', usersRouter);
-
-const postsRouter = require('./api/posts.js');
-server.use('/posts', postsRouter);
-
-
-const { client } = require('./db');
-
+const { client } = require('./backend/db');
 client.connect();
 
 server.listen(PORT, () => {
